@@ -1,33 +1,42 @@
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2 
-kind: Deployment 
-metadata: 
-  name: angular-deployment 
-spec: 
-  selector: 
-    matchLabels: 
-      app: angular 
-  replicas: 5 # tells deployment to run 2 pods matching the template 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi
+  labels:
+    app: weather-forecast
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: webapi
   template:
-    metadata: 
-      labels: 
-        app: angular 
-    spec: 
-      containers: 
-      - name: angular 
-        image: houssemdocker/angular-app:#{Build.BuildId}#
-        ports: 
-        - containerPort: 80 
---- 
-# https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service  
-kind: Service 
-apiVersion: v1 
-metadata: 
-  name: angular-service 
-spec: 
-  selector: 
-    app: angular 
-  ports: 
-  - protocol: TCP 
-    port: 80 
-    targetPort: 80 
-  type: LoadBalancer 
+    metadata:
+      labels:
+        app: weather-forecast
+        service: webapi
+    spec:
+      containers:
+        - name: webapi
+          image: aspdocker1.azurecr.io/dotnet:31
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi
+  labels:
+    app: weather-forecast
+    service: webapi
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: webapi
