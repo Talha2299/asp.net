@@ -1,11 +1,11 @@
 # https://hub.docker.com/_/microsoft-dotnet
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 
-WORKDIR /src
+WORKDIR /source
 
-COPY . . <--copies the nuget packages to the build container
+COPY . . 
 
-RUN dotnet restore  <--this restore will use the nuget.config
+RUN dotnet restore  
 
 RUN dotnet build -c Release -o /app --no-restore
 WORKDIR /source
