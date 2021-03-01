@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: webapi
-          image: aspdocker1.azurecr.io/dotnet:31
+          image: aspdocker1.azurecr.io/dotnetcore:#{Build.BuildId}#
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
